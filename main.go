@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/cdproto/fetch"
@@ -43,23 +42,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// capture screenshot of an element
-	var buf []byte
-	// capture entire browser viewport, returning png with quality=90
 	if err := chromedp.Run(taskCtx,
 		copyCookies(),
 		intercept(),
 		chromedp.Navigate(findMyURL),
-		chromedp.FullScreenshot(&buf, 90),
 		dumpBodies(),
 	); err != nil {
 		log.Fatal(err)
 	}
-	if err := os.WriteFile("fullScreenshot.png", buf, 0o644); err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("wrote fullScreenshot.png")
-	time.Sleep(time.Minute)
 }
 
 func intercept() chromedp.Action {
